@@ -16,7 +16,6 @@ class employee:
         self.name = name
         self.gender = gender
         self.ID = ID
-        self.count = None  # 회사 전체 직원수
 
     def setName(self, name):
         self.name = name
@@ -38,6 +37,15 @@ class employee:
 
     def info(self):
         print("이름 : ", self.name, "성별 : ", self.gender, "ID :", self.ID)
+
+class employeeFactory: #factory pattern
+    def __inti__(self):
+        self.employee_count=0
+    def createEmployee(self,name,gender,ID): #사용할때 인스턴스를 저장할 변수를 선언하면서 사용
+        self.employee_count+=1
+        return employee(name,gender,ID)
+    def employeeCount(self):
+        return self.employee_count
 
 
 class department:
