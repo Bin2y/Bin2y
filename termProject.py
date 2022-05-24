@@ -8,8 +8,8 @@ class department: // prototype?이 될수도 있다. 여러 부서에 상속 가
 
 class 
 
+composite
 """
-
 
 class employee:
     def __init__(self, name, gender, ID):
@@ -17,46 +17,55 @@ class employee:
         self.gender = gender
         self.ID = ID
 
-    def setName(self, name):
+    def getState(self):
+        return self.name,self.gender,self.ID
+
+class employeeBuilder: #builder pattern
+    
+    def __init__(self):
+        self.name = None
+        self.gender = None
+        self.ID = None
+    
+    def setName(self,name):
         self.name = name
-
-    def getName(self):
-        return self.name
-
+        return self
     def setGender(self, gender):
         self.gender = gender
-
-    def getGender(self):
-        return self.gender
-
     def setID(self, ID):
         self.ID = ID
+    def build(self):
+        emp = employee(self.name,self.gender,self.ID)
+        return emp
 
-    def getID(self):
-        return self.ID
-
-    def info(self):
-        print("이름 : ", self.name, "성별 : ", self.gender, "ID :", self.ID)
-
-class employeeFactory: #factory pattern
-    def __inti__(self):
-        self.employee_count=0
-    def createEmployee(self,name,gender,ID): #사용할때 인스턴스를 저장할 변수를 선언하면서 사용
-        self.employee_count+=1
-        return employee(name,gender,ID)
-    def employeeCount(self):
-        return self.employee_count
 
 
 class department:
     def __init__(self):
-        self.headCount = None  # 부서 인원수
-        self.departmentName = None  # 부서 이름
+        self.workers=[]
+        self.workersCount=0
+        self.departmentName = ""  # 부서 이름
 
-    def setDepartmentName(self, departmentName):
+    def setDepartmentName(self,departmentName):
         self.departmentName = departmentName
 
-    def register(self, employee)
+    def register(self, employee:employee):
+        self.workers.append(employee)
+        self.workersCount+=1
+    
+    def sendOut(self,employee:employee):
+        if employee in self.workers:
+            self.workers.remove(employee)
+            self.workersCount-=1
+    
+            
 
 
-a = employee("윤정빈", "male", 123)
+
+a = employeeFactory()
+a.createEmployee("윤정빈", "male", 123)
+myhome = department()
+myhome.setDepartmentName("집")
+myhome.register(a)
+
+
