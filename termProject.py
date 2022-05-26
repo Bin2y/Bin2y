@@ -1,6 +1,6 @@
 # 201802394 윤정빈 Design Pattern TermProject
 # 게임? singleton(게임 액터의 생성), facade(전체적인 게임의 구동),
-# 인사관리? factory(신입 생성, 재직자 관리 등, 사원 ID 등),composite pattern(부서 이동, 관리) , proxy? 고려해볼만하다
+# 인사관리? builder(신입 생성, 재직자 관리 등, 사원 ID 등),composite pattern(부서 이동, 관리) , proxy? 고려해볼만하다
 """
 class employee: // 직원 클래스
 
@@ -32,15 +32,17 @@ class employeeBuilder: #builder pattern
         return self
     def setGender(self, gender):
         self.gender = gender
+        return self
     def setID(self, ID):
         self.ID = ID
+        return self
     def build(self):
         emp = employee(self.name,self.gender,self.ID)
         return emp
 
 
 
-class department:
+class department: #component class
     def __init__(self):
         self.workers=[]
         self.workersCount=0
@@ -58,14 +60,30 @@ class department:
             self.workers.remove(employee)
             self.workersCount-=1
     
+    def info(self):
+        pass
+
+class PersonalTeam(department): #concrete1
+    def info(self):
+        print("인사팀의 직원수는 : " + self.workersCount + "명 입니다.")
+
+class AccountingTeam(department): #concrete1
+    def info(self):
+        print("회계팀의 직원수는 : " + self.workersCount + "명 입니다.")
+
+class MarketingTeam(department): #concrete1
+    def info(self):
+        print("마케팅팀의 직원수는 : " + self.workersCount + "명 입니다.")
+    
+class Group(department):
+    def __init__(self):
+        self.components=[]
+    
             
 
 
 
-a = employeeFactory()
-a.createEmployee("윤정빈", "male", 123)
-myhome = department()
-myhome.setDepartmentName("집")
-myhome.register(a)
-
+a = employeeBuilder()
+emp1 = a.setName("윤정빈").setGender("남자").setID("000").build()
+print(emp1.getState())
 
