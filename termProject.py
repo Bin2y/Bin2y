@@ -11,6 +11,9 @@ class
 composite
 """
 
+from dis import Instruction
+
+
 class employee:
     def __init__(self, name, gender, ID):
         self.name = name
@@ -81,8 +84,14 @@ class client:
     def __init__(self):
         self.group = Group()
         self.emp = employee()
+    def switch(self,inputNum):
+        inst = {"0":}
+    def start(self):
+        print("인사관리 프로그램이 시작되었습니다")
+        while(True):
+            print("1.사원생성 2.사원제거 3.회사원수 10.종료")
+            inputNum = input("숫자를 입력하세요: ")
+            switch (inputNum)
 
-a = employeeBuilder()
-emp1 = a.setName("윤정빈").setGender("남자").setID("000").build()
-print(emp1.getState())
-
+c = client()
+c.start()
