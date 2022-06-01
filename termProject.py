@@ -46,11 +46,7 @@ class department: #component class
     def __init__(self):
         self.workers=[]
         self.workersCount=0
-        self.departmentName = ""  # 부서 이름
-
-    def setDepartmentName(self,departmentName):
-        self.departmentName = departmentName
-
+        
     def register(self, employee:employee):
         self.workers.append(employee)
         self.workersCount+=1
@@ -75,13 +71,16 @@ class MarketingTeam(department): #concrete1
     def info(self):
         print("마케팅팀의 직원수는 : " + self.workersCount + "명 입니다.")
     
-class Group(department):
+class Group(department): #composite pattern
     def __init__(self):
         self.components=[]
     
             
 
-
+class client:
+    def __init__(self):
+        self.group = Group()
+        self.emp = employee()
 
 a = employeeBuilder()
 emp1 = a.setName("윤정빈").setGender("남자").setID("000").build()
