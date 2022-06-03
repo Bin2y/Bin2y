@@ -77,21 +77,40 @@ class MarketingTeam(department): #concrete1
 class Group(department): #composite pattern
     def __init__(self):
         self.components=[]
+    def add(self,department:department):
+        self.components.append(department)
+    def info(self):
+        for i in len(self.components):
+            self.components[i].info()
+
     
             
 
 class client:
     def __init__(self):
+        self.P = PersonalTeam()
+        self.A = AccountingTeam()
+        self.M = MarketingTeam()
         self.group = Group()
-        self.emp = employee()
-    def switch(self,inputNum):
-        inst = {"0":}
+        self.emp = employeeBuilder()
+    def makeGroup(self):
+        self.group.add(self.P)
+        self.group.add(self.A)
+        self.group.add(self.M)
     def start(self):
         print("인사관리 프로그램이 시작되었습니다")
         while(True):
             print("1.사원생성 2.사원제거 3.회사원수 10.종료")
             inputNum = input("숫자를 입력하세요: ")
-            switch (inputNum)
+            if(inputNum==0):
+                break
+            elif(inputNum==1):
+                print("이름 성별 나이를 차례대로 입력해주세요.")
+                newEmp = self.emp.build(name,gender,ID)
+                print("새로운 사원을 넣을 부서를 정하세요")
+            elif(inputNum==2):
+                print("제거할 사원이름을 적어주세요")
+                
 
 c = client()
 c.start()
