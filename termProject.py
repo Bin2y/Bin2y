@@ -1,6 +1,4 @@
 # 201802394 윤정빈 Design Pattern TermProject
-# 게임? singleton(게임 액터의 생성), facade(전체적인 게임의 구동),
-# 인사관리? builder(신입 생성, 재직자 관리 등, 사원 ID 등),composite pattern(부서 이동, 관리) , proxy? 고려해볼만하다
 """
 class employee: // 직원 클래스
 
@@ -12,23 +10,33 @@ composite
 """
 
 from dis import Instruction
+from unicodedata import name
 
 
 class employee:
-    def __init__(self, name, gender, ID):
+    def __init__(self, name, gender, empID):
         self.name = name
         self.gender = gender
-        self.ID = ID
+        self.empID = empID
+
+    def getName(self):
+        return self.name
+
+    def getGender(self):
+        return self.gender
+
+    def empId(self):
+        return self.empID
 
     def getState(self):
-        return self.name,self.gender,self.ID
+        return self.name,self.gender,self.empID
 
 class employeeBuilder: #builder pattern
     
     def __init__(self):
         self.name = None
         self.gender = None
-        self.ID = None
+        self.empID = None
     
     def setName(self,name):
         self.name = name
@@ -36,11 +44,11 @@ class employeeBuilder: #builder pattern
     def setGender(self, gender):
         self.gender = gender
         return self
-    def setID(self, ID):
-        self.ID = ID
+    def setID(self, empID):
+        self.empID = empID
         return self
     def build(self):
-        emp = employee(self.name,self.gender,self.ID)
+        emp = employee(self.name,self.gender,self.empID)
         return emp
 
 
@@ -48,45 +56,52 @@ class employeeBuilder: #builder pattern
 class department: #component class
     def __init__(self):
         self.workers=[]
-        self.workersCount=0
         
     def register(self, employee:employee):
         self.workers.append(employee)
-        self.workersCount+=1
     
-    def sendOut(self,employee:employee):
-        if employee in self.workers:
-            self.workers.remove(employee)
-            self.workersCount-=1
-    
+    def remove(self, removeName):
+        for index, value in enumerate(self.workers):
+            if value.getName()==removeName:
+                self.workers.pop(index)
+                print("제거완료")
+                return True
+                
     def info(self):
         pass
 
 class PersonalTeam(department): #concrete1
     def info(self):
-        print("인사팀의 직원수는 : " + self.workersCount + "명 입니다.")
+        print("인사팀의 직원수는 : " + str(len(self.workers)) + "명 입니다.")
+        for i in self.workers:
+            print(i.getState())
 
 class AccountingTeam(department): #concrete1
     def info(self):
-        print("회계팀의 직원수는 : " + self.workersCount + "명 입니다.")
-
+        print("회계팀의 직원수는 : " + str(len(self.workers)) + "명 입니다.")
+        for i in self.workers:
+            print(i.getState())
 class MarketingTeam(department): #concrete1
     def info(self):
-        print("마케팅팀의 직원수는 : " + self.workersCount + "명 입니다.")
-    
+        print("마케팅팀의 직원수는 : " + str(len(self.workers)) + "명 입니다.")
+        for i in self.workers:
+            print(i.getState())
+
 class Group(department): #composite pattern
     def __init__(self):
         self.components=[]
     def add(self,department:department):
         self.components.append(department)
+    def re(self,num):
+        return self.components[num]
     def info(self):
-        for i in len(self.components):
-            self.components[i].info()
+        for i in self.components:
+            i.info()
 
     
             
 
-class client:
+class client: #Facade Pattern
     def __init__(self):
         self.P = PersonalTeam()
         self.A = AccountingTeam()
@@ -97,20 +112,53 @@ class client:
         self.group.add(self.P)
         self.group.add(self.A)
         self.group.add(self.M)
-    def start(self):
+    def regist(self):
+        name,gender,empID = input("이름 성별 ID를 차례대로 입력해주세요 : ").split()
+        newEmp = self.emp.setName(name).setGender(gender).setID(empID).build()
+        print("새로운 사원을 넣을 부서를 정하세요")
+        print("0 : 인사팀, 1: 회계팀, 2: 마케팅팀")
+        num = int(input("숫자를 입력하세요: "))
+        team = self.group.re(num)
+        team.register(newEmp)
+    def remove(self):
+        print("제거할 사원이름을 적어주세요")
+        removeName = input("사원이름 : ")
+        for i in self.group.components:
+            isRemove = i.remove(removeName)
+            if isRemove:
+                break
+    def moveDepartment(self):
+        print("부서를 정하세요")
+        print("0 : 인사팀, 1: 회계팀, 2: 마케팅팀")
+        num = int(input("숫자를 입력하세요: "))
+        team = self.group.re(num)
+        print("옮길 사원이름을 적어주세요")
+        moveName = input("사원이름 : ")
+        if moveName not in team:
+            print(moveName+" 이름을 가진 사원이 존재 하지 않습니다 다시 입력해 주세요")
+            moveName = input("사원이름 : ")
+        else:
+            print("옮길 부서를 정하세요")
+            print("0 : 인사팀, 1: 회계팀, 2: 마케팅팀")
+    def main(self):
+        self.makeGroup()
         print("인사관리 프로그램이 시작되었습니다")
         while(True):
-            print("1.사원생성 2.사원제거 3.회사원수 10.종료")
-            inputNum = input("숫자를 입력하세요: ")
+            print("-----------------------------------")
+            print("0.모든 정보 1.사원생성 2.사원제거 3.사원이동 10.종료")
+            inputNum = int(input("숫자를 입력하세요: "))
+            print("-----------------------------------")
             if(inputNum==0):
-                break
+                self.group.info()
             elif(inputNum==1):
-                print("이름 성별 나이를 차례대로 입력해주세요.")
-                newEmp = self.emp.build(name,gender,ID)
-                print("새로운 사원을 넣을 부서를 정하세요")
+                self.regist()
             elif(inputNum==2):
-                print("제거할 사원이름을 적어주세요")
+                self.remove()
+            elif(inputNum==3):
+                self.moveDepartment()
+            elif(inputNum==10):
+                break
                 
 
 c = client()
-c.start()
+c.main()
